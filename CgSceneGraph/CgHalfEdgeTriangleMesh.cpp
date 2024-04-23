@@ -105,7 +105,7 @@ const std::vector<CgBaseHeFace*>& CgHalfEdgeTriangleMesh::getFaces() const
     return m_faces;
 }
 
-void parseOBJ(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<unsigned int>& indices) {
+void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<unsigned int>& indices) {
     std::vector<CgHeVert*> cgHeVerts(vertices.size());
     std::vector<CgHeEdge*> cgHeEdges;
     std::vector<CgHeFace*> cgHeFaces;
@@ -131,7 +131,6 @@ void parseOBJ(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec
         cgHeEdges.push_back(edge2);
         cgHeEdges.push_back(edge3);
 
-        // TODO
         // Assign edge to vertex
         cgHeVerts[vIndex1]->m_edge = edge3;
         cgHeVerts[vIndex2]->m_edge = edge1;
@@ -157,6 +156,16 @@ void parseOBJ(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec
 
         // Assign edge to face
         face->m_edge = cgHeEdges[cgHeEdges.size() - 3];
+    }
+
+    for(size_t i = 0 ; i < cgHeFaces.size(); i++) {
+        m_faces.push_back(cgHeFaces[i]);
+    }
+    for(size_t i = 0 ; i < cgHeEdges.size(); i++) {
+        m_edges.push_back(cgHeEdges[i]);
+    }
+    for(size_t i = 0 ; i < cgHeVerts.size(); i++) {
+        m_verts.push_back(cgHeVerts[i]);
     }
 
 
