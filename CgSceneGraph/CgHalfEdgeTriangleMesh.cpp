@@ -74,10 +74,10 @@ m_id(42)
     m_edges.push_back(n6);
 
     //attributes
-    nv1->m_color=glm::vec3(0.0,1.0,0.0);
-    nv2->m_color=glm::vec3(0.0,1.0,0.0);
-    nv3->m_color=glm::vec3(0.0,1.0,0.0);
-    nv4->m_color=glm::vec3(0.0,1.0,0.0);
+    nv1->m_color=glm::vec3(1.0,0.0,0.0);
+    nv2->m_color=glm::vec3(1.0,0.0,0.0);
+    nv3->m_color=glm::vec3(1.0,0.0,0.0);
+    nv4->m_color=glm::vec3(1.0,0.0,0.0);
 
     nf1->m_normal=glm::vec3(0.0,0.0,1.0);
     nf2->m_normal=glm::vec3(0.0,0.0,1.0);
@@ -159,12 +159,14 @@ void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3>& vertices, co
     }
 
     for(size_t i = 0 ; i < cgHeFaces.size(); i++) {
+        cgHeFaces[i]->m_normal = glm::vec3(0.0,0.0,1.0);
         m_faces.push_back(cgHeFaces[i]);
     }
     for(size_t i = 0 ; i < cgHeEdges.size(); i++) {
         m_edges.push_back(cgHeEdges[i]);
     }
     for(size_t i = 0 ; i < cgHeVerts.size(); i++) {
+        cgHeVerts[i]->m_color = glm::vec3(0.0,1.0,0.0);
         m_verts.push_back(cgHeVerts[i]);
     }
 
