@@ -106,6 +106,11 @@ const std::vector<CgBaseHeFace*>& CgHalfEdgeTriangleMesh::getFaces() const
 }
 
 void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<unsigned int>& indices) {
+
+    m_faces.clear();
+    m_edges.clear();
+    m_verts.clear();
+
     std::vector<CgHeVert*> cgHeVerts(vertices.size());
     std::vector<CgHeEdge*> cgHeEdges;
     std::vector<CgHeFace*> cgHeFaces;
@@ -156,6 +161,16 @@ void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3>& vertices, co
 
         // Assign edge to face
         face->m_edge = cgHeEdges[cgHeEdges.size() - 3];
+
+        // Assign pair to edge
+        for(int j=0;j<cgHeEdges.size();j++) {
+            for(int m=0;m<cgHeEdges.size();m++) {
+                if(cgHeEdges[j]->m_vert==cgHeEdges[m]->m_vert  && cgHeEdges[j]->m_next==cgHeEdges[m]->m_next ) {
+                    cgHeEdges[j]->m_pair = cgHeEdges[m];
+                    cgHeEdges[m]->m_pair = cgHeEdges[j];
+                }
+            }
+        }
     }
 
     for(size_t i = 0 ; i < cgHeFaces.size(); i++) {
@@ -172,12 +187,21 @@ void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3>& vertices, co
 
 
     // test
-    int index = 1;
+    int index = 0;
     CgHeEdge* edge = cgHeFaces[index]->m_edge;
     do {
         edge = edge->m_next;
-        std::cout << "index: " << index << ", " << "x: " << edge->m_vert->m_position.x << std::endl;
+        // std::cout << "index: " << index << ", " << "x: " << edge->m_vert->m_position.x << std::endl;
     } while (edge != cgHeFaces[index]->m_edge);
+
+
+    // Lauf über Kanten, die zu gegebenem Vertex gehören
+    edge = cgHeVerts[index]->m_edge;
+    do {
+    // do something with edge, edge->pair or edge->face
+        edge = edge->m_pair->m_next;
+        std::cout << "x: " << edge->m_next->m_vert->m_position.x << " y: " << edge->m_next->m_vert->m_position.y << " z: " << edge->m_next->m_vert->m_position.z << std::endl;
+    } while (edge != cgHeVerts[index]->m_edge);
 }
 
 void CgHalfEdgeTriangleMesh::init( std::string filename)
