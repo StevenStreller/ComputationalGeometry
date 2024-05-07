@@ -82,7 +82,6 @@ int main(int argc, char **argv) {
    /*************************************************************************************/
 
        //  innerhalbb der SceneControl Klasse,
-N
 
 
     return app.exec();
