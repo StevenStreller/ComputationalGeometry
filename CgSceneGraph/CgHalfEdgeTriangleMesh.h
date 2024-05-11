@@ -8,33 +8,40 @@
 #include <glm/glm.hpp>
 #include <string>
 
-class CgHalfEdgeTriangleMesh : public CgBaseHalfEdgeTriangleMesh
-{
+class CgHalfEdgeTriangleMesh : public CgBaseHalfEdgeTriangleMesh {
 public:
     CgHalfEdgeTriangleMesh();
+
     CgHalfEdgeTriangleMesh(int id);
 
     ~CgHalfEdgeTriangleMesh();
 
     //inherited from CgBaseRenderableObject
     Cg::ObjectType getType() const;
+
     unsigned int getID() const;
 
     //inherited from CgBaseHalfEdgeTriangleMesh
 
-    const std::vector<CgBaseHeFace*>& getFaces() const;
+    const std::vector<CgBaseHeFace *> &getFaces() const;
 
     //own stuff
 
-    void init( std::string filename);
+    void init(std::string filename);
+
     const glm::vec3 getCenter() const;
 
+    void subdivision();
 
 private:
 
-    std::vector<CgBaseHeFace*> m_faces;
-    std::vector<CgBaseHeVert*> m_verts;
-    std::vector<CgBaseHeEdge*> m_edges;
+    std::vector<CgBaseHeFace *> m_faces;
+    std::vector<CgBaseHeVert *> m_verts;
+    std::vector<CgBaseHeEdge *> m_edges;
+
+    std::vector<CgBaseHeFace *> temp_m_faces;
+    std::vector<CgBaseHeVert *> temp_m_verts;
+    std::vector<CgBaseHeEdge *> temp_m_edges;
 
 
     const Cg::ObjectType m_type;
@@ -43,13 +50,13 @@ private:
     void parseOBJ(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &normals,
                   const std::vector<unsigned int> &indices);
 
-    void subdivision();
+
 };
 
 
-inline Cg::ObjectType  CgHalfEdgeTriangleMesh::getType() const {return m_type;}
-inline unsigned int CgHalfEdgeTriangleMesh::getID() const {return m_id;}
+inline Cg::ObjectType CgHalfEdgeTriangleMesh::getType() const { return m_type; }
 
+inline unsigned int CgHalfEdgeTriangleMesh::getID() const { return m_id; }
 
 
 #endif // CGHALFEDGETRIANGLEMESH_H
