@@ -109,35 +109,35 @@ void CgHalfEdgeTriangleMesh::subdivision() {
 
 
         // Erstelle neue Vertices
-        auto *nv4 = new CgHeVert();
-        nv4->m_position = (e1->vert()->position() + e1->next()->next()->vert()->position()) / 2.0f;
+        auto *nv1 = new CgHeVert();
+        nv1->m_position = (e1->vert()->position() + e1->next()->next()->vert()->position()) / 2.0f;
 
-        auto *nv5 = new CgHeVert();
-        nv5->m_position = (e2->vert()->position() + e2->next()->next()->vert()->position()) / 2.0f;
+        auto *nv2 = new CgHeVert();
+        nv2->m_position = (e2->vert()->position() + e2->next()->next()->vert()->position()) / 2.0f;
 
-        auto *nv6 = new CgHeVert();
-        nv6->m_position = (e3->vert()->position() + e3->next()->next()->vert()->position()) / 2.0f;
+        auto *nv3 = new CgHeVert();
+        nv3->m_position = (e3->vert()->position() + e3->next()->next()->vert()->position()) / 2.0f;
 
         // Erstelle neue Edges
-        auto *n7 = new CgHeEdge();
-        auto *n8 = new CgHeEdge();
-        auto *n9 = new CgHeEdge();
+        auto *n1 = new CgHeEdge();
+        auto *n2 = new CgHeEdge();
+        auto *n3 = new CgHeEdge();
 
         // Setze die Vertices der neuen Kanten
-        n7->m_vert = nv4;
-        n7->m_next = n8;
+        n1->m_vert = nv1;
+        n1->m_next = n2;
 
-        n8->m_vert = nv5;
-        n8->m_next = n9;
+        n2->m_vert = nv2;
+        n2->m_next = n3;
 
-        n9->m_vert = nv6;
-        n9->m_next = n7;
+        n3->m_vert = nv3;
+        n3->m_next = n1;
 
         // Erstelle ein neues Face
         auto *newFace = new CgHeFace();
 
-        // Setze die Kante des Faces auf eine der neu erstellten Kanten (z.B. n7)
-        newFace->m_edge = n7;
+        // Setze die Kante des Faces auf eine der neu erstellten Kanten (z.B. n1)
+        newFace->m_edge = n1;
 
         // Füge das neue Face in die Datenstruktur ein
         // (abhängig von der konkreten Implementierung der Datenstruktur)
@@ -145,17 +145,17 @@ void CgHalfEdgeTriangleMesh::subdivision() {
         // Setze die Farbe für die Kanten
 
         // Füge die neuen Vertices in die Liste der Vertices ein
-        nv4->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
-        nv5->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
-        nv6->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
-        m_verts.push_back(nv4);
-        m_verts.push_back(nv5);
-        m_verts.push_back(nv6);
+        nv1->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        nv2->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        nv3->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        m_verts.push_back(nv1);
+        m_verts.push_back(nv2);
+        m_verts.push_back(nv3);
 
         // Füge die neuen Kanten in die Liste der Kanten ein
-        m_edges.push_back(n7);
-        m_edges.push_back(n8);
-        m_edges.push_back(n9);
+        m_edges.push_back(n1);
+        m_edges.push_back(n2);
+        m_edges.push_back(n3);
 
         // Füge das neue Face in die Liste der Faces ein
         m_faces.push_back(newFace);
@@ -173,7 +173,7 @@ void CgHalfEdgeTriangleMesh::subdivision() {
         // Faces generieren mithelfe von half-edge
 
         // 1 Face -> 4 Face
-        
+
 
 
         // Für Kante e1
