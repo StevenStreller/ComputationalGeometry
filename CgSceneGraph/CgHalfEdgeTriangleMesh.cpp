@@ -101,6 +101,108 @@ const std::vector<CgBaseHeFace *> &CgHalfEdgeTriangleMesh::getFaces() const {
     return m_faces;
 }
 
+void CgHalfEdgeTriangleMesh::subdivision() {
+    for (auto &m_face: m_faces) {
+        const auto *e1 = dynamic_cast<const CgHeEdge *>(m_face->edge());
+        const auto *e2 = dynamic_cast<const CgHeEdge *>(m_face->edge()->next());
+        const auto *e3 = dynamic_cast<const CgHeEdge *>(m_face->edge()->next()->next());
+
+
+        // Erstelle neue Vertices
+        auto *nv4 = new CgHeVert();
+        nv4->m_position = (e1->vert()->position() + e1->next()->next()->vert()->position()) / 2.0f;
+
+        auto *nv5 = new CgHeVert();
+        nv5->m_position = (e2->vert()->position() + e2->next()->next()->vert()->position()) / 2.0f;
+
+        auto *nv6 = new CgHeVert();
+        nv6->m_position = (e3->vert()->position() + e3->next()->next()->vert()->position()) / 2.0f;
+
+        // Erstelle neue Edges
+        auto *n7 = new CgHeEdge();
+        auto *n8 = new CgHeEdge();
+        auto *n9 = new CgHeEdge();
+
+        // Setze die Vertices der neuen Kanten
+        n7->m_vert = nv4;
+        n7->m_next = n8;
+
+        n8->m_vert = nv5;
+        n8->m_next = n9;
+
+        n9->m_vert = nv6;
+        n9->m_next = n7;
+
+        // Erstelle ein neues Face
+        auto *newFace = new CgHeFace();
+
+        // Setze die Kante des Faces auf eine der neu erstellten Kanten (z.B. n7)
+        newFace->m_edge = n7;
+
+        // Füge das neue Face in die Datenstruktur ein
+        // (abhängig von der konkreten Implementierung der Datenstruktur)
+
+        // Setze die Farbe für die Kanten
+
+        // Füge die neuen Vertices in die Liste der Vertices ein
+        nv4->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        nv5->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        nv6->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        m_verts.push_back(nv4);
+        m_verts.push_back(nv5);
+        m_verts.push_back(nv6);
+
+        // Füge die neuen Kanten in die Liste der Kanten ein
+        m_edges.push_back(n7);
+        m_edges.push_back(n8);
+        m_edges.push_back(n9);
+
+        // Füge das neue Face in die Liste der Faces ein
+        m_faces.push_back(newFace);
+
+
+
+
+
+        // Alte Kante auf neuen (in der Mitte) Vertex zeigen lassen
+
+
+        // Neue Kante erzeugen und Startpunkt in der Mitte zum alten Punkt von alter Kante
+        // Neue Kante in m_edges reinknüppeln :-)
+        // half-edge struktur auffrischen
+        // Faces generieren mithelfe von half-edge
+
+        // 1 Face -> 4 Face
+        
+
+
+        // Für Kante e1
+        std::cout << "Koordinaten von e1:" << std::endl;
+        std::cout << "Punkt 1: (" << e1->vert()->position().x << ", " << e1->vert()->position().y << ", "
+                  << e1->vert()->position().z << ")" << std::endl;
+        if (e1->pair() != nullptr) {
+            std::cout << "Punkt 2: (" << e1->pair()->vert()->position().x << ", " << e1->pair()->vert()->position().y
+                      << ", " << e1->pair()->vert()->position().z << ")" << std::endl;
+        }
+        // Für Kante e2
+        std::cout << "Koordinaten von e2:" << std::endl;
+        std::cout << "Punkt 1: (" << e2->vert()->position().x << ", " << e2->vert()->position().y << ", "
+                  << e2->vert()->position().z << ")" << std::endl;
+        if (e2->pair() != nullptr) {
+            std::cout << "Punkt 2: (" << e2->pair()->vert()->position().x << ", " << e2->pair()->vert()->position().y
+                      << ", " << e2->pair()->vert()->position().z << ")" << std::endl;
+        }
+        // Für Kante e3
+        std::cout << "Koordinaten von e3:" << std::endl;
+        std::cout << "Punkt 1: (" << e3->vert()->position().x << ", " << e3->vert()->position().y << ", "
+                  << e3->vert()->position().z << ")" << std::endl;
+        if (e3->pair() != nullptr) {
+            std::cout << "Punkt 2: (" << e3->pair()->vert()->position().x << ", " << e3->pair()->vert()->position().y
+                      << ", " << e3->pair()->vert()->position().z << ")" << std::endl;
+        }
+    }
+}
+
 void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &normals,
                                       const std::vector<unsigned int> &indices) {
 
@@ -185,22 +287,6 @@ void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3> &vertices, co
         m_verts.push_back(cgHeVerts[i]);
     }
 
-    // calculate normals
-    for (size_t i = 0; i < cgHeFaces.size(); i++) {
-        CgHeEdge *edge = cgHeFaces[i]->m_edge;
-
-        CgHeVert *v1 = edge->m_vert;
-        CgHeVert *v2 = edge->m_next->m_vert;
-        CgHeVert *v3 = edge->m_next->m_next->m_vert;
-
-        std::cout << "v1: " << v1->m_position.x << v1->m_position.y << v1->m_position.z << std::endl;
-        std::cout << "v2: " << v2->m_position.x << v2->m_position.y << v2->m_position.z << std::endl;
-        std::cout << "v3: " << v3->m_position.x << v3->m_position.y << v3->m_position.z << std::endl;
-
-        // TODO: normalen berechnen (Kreuzprodukt)
-    }
-
-
     // Alle Halb-Kanten eines Faces durchlaufen
     int index = 0;
     CgHeEdge *edge = cgHeFaces[index]->m_edge;
@@ -225,24 +311,15 @@ void CgHalfEdgeTriangleMesh::init(std::string filename) {
     std::vector<glm::vec3> temp_vertnormals;
     std::vector<unsigned int> temp_indices;
 
-
     ObjLoader loader;
     loader.load(filename);
-
-    std::cout << "Size:" << temp_vertnormals.size();
 
     loader.getPositionData(temp_vertices);
     loader.getNormalData(temp_vertnormals);
     loader.getFaceIndexData(temp_indices);
 
-    std::cout << " Size:" << temp_vertnormals.size() << std::endl;
-
-    /*for(size_t i=0; i < temp_vertnormals.size(); i++) {
-        std::cout << "test: " << temp_vertnormals[i].x << " " << temp_vertnormals[i].y << " " << temp_vertnormals[i].z << std::endl;
-    }*/
-
-
     parseOBJ(temp_vertices, temp_vertnormals, temp_indices);
+    subdivision();
 
     // now need to convert into HalfEdge Datastructure :-) ...
 }
