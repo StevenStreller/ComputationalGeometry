@@ -367,7 +367,8 @@ void CgHalfEdgeTriangleMesh::parseOBJ(const std::vector<glm::vec3> &vertices, co
     }
 
     for (size_t i = 0; i < cgHeFaces.size(); i++) {
-        cgHeFaces[i]->m_normal = glm::vec3(0.0, 0.0, 1.0);
+        cgHeFaces[i]->m_normal = glm::cross(cgHeFaces[i]->m_edge->m_vert->m_position,
+                                            cgHeFaces[i]->m_edge->m_next->m_vert->m_position);
         m_faces.push_back(cgHeFaces[i]);
     }
     for (size_t i = 0; i < cgHeEdges.size(); i++) {
