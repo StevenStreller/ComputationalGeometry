@@ -13,6 +13,7 @@
 #include "../CgEvents/CgTrackballEvent.h"
 #include "../CgEvents/CgSplatEvent.h"
 #include "../CgEvents/CgPickRayEvent.h"
+#include "../CgEvents/CgButtonClickEvent.h"
 #include "../CgSceneGraph/CgHalfEdgeTriangleMesh.h"
 
 #include <QSlider>
@@ -183,7 +184,7 @@ void CgQtGui::createOptionPanelExample1(QWidget *parent) {
 
     /*Example for using a button */
 
-    QPushButton *myButton1 = new QPushButton("&drueck mich");
+    QPushButton *myButton1 = new QPushButton("Subdivide");
     tab1_control->addWidget(myButton1);
 
     connect(myButton1, SIGNAL(clicked()), this, SLOT(slotMyButton1Pressed()));
@@ -311,10 +312,8 @@ void CgQtGui::slotTrackballChanged() {
 
 void CgQtGui::slotMyButton1Pressed() {
     std::cout << "button 1 pressed " << std::endl;
-    CgHalfEdgeTriangleMesh mesh;
-
-    mesh.subdivision();
-    mesh.
+    CgBaseEvent *e = new CgButtonClickEvent(Cg::CgButtonClickEvent, CgButtonClickEvent::SubdivButton);
+    notifyObserver(e);
 }
 
 

@@ -22,6 +22,7 @@ SOURCES += main.cpp \
     CgSceneGraph/CgPolyLine.cpp \
     CgSceneGraph/CgSceneControl.cpp \
     CgEvents/CgKeyEvent.cpp \
+    CgEvents/CgButtonClickEvent.cpp \
     CgQtViewer/CgQtGlBufferObject.cpp \
     CgQtViewer/CgTrackball.cpp \
     CgEvents/CgWindowResizeEvent.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     CgSceneGraph/CgPolyLine.h \
     CgSceneGraph/CgSceneControl.h \
     CgEvents/CgKeyEvent.h \
+    CgEvents/CgButtonClickEvent.h \
     CgBase/CgBaseRenderer.h \
     CgBase/CgBaseRenderableObject.h \
     CgBase/CgBasePointCloud.h \

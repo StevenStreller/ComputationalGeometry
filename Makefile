@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = PointViewer1.0.0
-DISTDIR = /mnt/f/Studium/ComputationalGeometry/.tmp/PointViewer1.0.0
+DISTDIR = /mnt/c/Users/steve/CLionProjects/ComputationalGeometry/.tmp/PointViewer1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5OpenGL.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
@@ -70,6 +70,7 @@ SOURCES       = main.cpp \
 		CgSceneGraph/CgPolyLine.cpp \
 		CgSceneGraph/CgSceneControl.cpp \
 		CgEvents/CgKeyEvent.cpp \
+		CgEvents/CgButtonClickEvent.cpp \
 		CgQtViewer/CgQtGlBufferObject.cpp \
 		CgQtViewer/CgTrackball.cpp \
 		CgEvents/CgWindowResizeEvent.cpp \
@@ -96,6 +97,7 @@ OBJECTS       = main.o \
 		CgPolyLine.o \
 		CgSceneControl.o \
 		CgKeyEvent.o \
+		CgButtonClickEvent.o \
 		CgQtGlBufferObject.o \
 		CgTrackball.o \
 		CgWindowResizeEvent.o \
@@ -162,6 +164,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -206,6 +209,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CgSceneGraph/CgPolyLine.h \
 		CgSceneGraph/CgSceneControl.h \
 		CgEvents/CgKeyEvent.h \
+		CgEvents/CgButtonClickEvent.h \
 		CgBase/CgBaseRenderer.h \
 		CgBase/CgBaseRenderableObject.h \
 		CgBase/CgBasePointCloud.h \
@@ -236,6 +240,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CgSceneGraph/CgPolyLine.cpp \
 		CgSceneGraph/CgSceneControl.cpp \
 		CgEvents/CgKeyEvent.cpp \
+		CgEvents/CgButtonClickEvent.cpp \
 		CgQtViewer/CgQtGlBufferObject.cpp \
 		CgQtViewer/CgTrackball.cpp \
 		CgEvents/CgWindowResizeEvent.cpp \
@@ -310,6 +315,7 @@ Makefile: ExerciseCOG.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -388,6 +394,7 @@ Makefile: ExerciseCOG.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -423,8 +430,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents CgBase/CgBaseHalfEdgeTriangleMesh.h CgBase/CgBaseHalfdgePrimitives.h CgEvents/CgLoadHalfEdgeMeshEvent.h CgEvents/CgLoadMeshEvent.h CgEvents/CgLoadPointCloudEvent.h CgEvents/CgPickRayEvent.h CgEvents/CgSplatEvent.h CgMath/CgEigenDecomposition3x3.h CgMath/Eigen/Core CgMath/Eigen/Eigen CgMath/Eigen/SVD CgQtViewer/CgQtGLRenderWidget.h CgQtViewer/CgQtGui.h CgBase/CgObserver.h CgBase/CgObservable.h CgBase/CgBaseEvent.h CgBase/CgEnums.h CgEvents/CgMouseEvent.h CgQtViewer/CgQtMainApplication.h CgSceneGraph/CgHalfEdgePrimitives.h CgSceneGraph/CgHalfEdgeTriangleMesh.h CgSceneGraph/CgPointCloud.h CgSceneGraph/CgPolyLine.h CgSceneGraph/CgSceneControl.h CgEvents/CgKeyEvent.h CgBase/CgBaseRenderer.h CgBase/CgBaseRenderableObject.h CgBase/CgBasePointCloud.h CgBase/CgBaseTriangleMesh.h CgBase/CgBasePolyline.h CgBase/CgBaseSceneControl.h CgQtViewer/CgQtGlBufferObject.h CgQtViewer/CgTrackball.h CgEvents/CgWindowResizeEvent.h CgSceneGraph/CgTriangleMesh.h CgUtils/ObjLoader.h CgBase/CgBaseImage.h CgEvents/CgTrackballEvent.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CgEvents/CgLoadHalfEdgeMeshEvent.cpp CgEvents/CgLoadMeshEvent.cpp CgEvents/CgLoadPointCloudEvent.cpp CgEvents/CgPickRayEvent.cpp CgEvents/CgSplatEvent.cpp CgMath/CgEigenDecomposition3x3.cpp CgQtViewer/CGQtGLRenderWidget.cpp CgQtViewer/CgQtGui.cpp CgBase/CgObservable.cpp CgEvents/CgMouseEvent.cpp CgQtViewer/CgQtMainApplication.cpp CgSceneGraph/CgHalfEdgePrimitives.cpp CgSceneGraph/CgHalfEdgeTriangleMesh.cpp CgSceneGraph/CgPointCloud.cpp CgSceneGraph/CgPolyLine.cpp CgSceneGraph/CgSceneControl.cpp CgEvents/CgKeyEvent.cpp CgQtViewer/CgQtGlBufferObject.cpp CgQtViewer/CgTrackball.cpp CgEvents/CgWindowResizeEvent.cpp CgSceneGraph/CgTriangleMesh.cpp CgUtils/ObjLoader.cpp CgEvents/CgTrackballEvent.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CgBase/CgBaseHalfEdgeTriangleMesh.h CgBase/CgBaseHalfdgePrimitives.h CgEvents/CgLoadHalfEdgeMeshEvent.h CgEvents/CgLoadMeshEvent.h CgEvents/CgLoadPointCloudEvent.h CgEvents/CgPickRayEvent.h CgEvents/CgSplatEvent.h CgMath/CgEigenDecomposition3x3.h CgMath/Eigen/Core CgMath/Eigen/Eigen CgMath/Eigen/SVD CgQtViewer/CgQtGLRenderWidget.h CgQtViewer/CgQtGui.h CgBase/CgObserver.h CgBase/CgObservable.h CgBase/CgBaseEvent.h CgBase/CgEnums.h CgEvents/CgMouseEvent.h CgQtViewer/CgQtMainApplication.h CgSceneGraph/CgHalfEdgePrimitives.h CgSceneGraph/CgHalfEdgeTriangleMesh.h CgSceneGraph/CgPointCloud.h CgSceneGraph/CgPolyLine.h CgSceneGraph/CgSceneControl.h CgEvents/CgKeyEvent.h CgEvents/CgButtonClickEvent.h CgBase/CgBaseRenderer.h CgBase/CgBaseRenderableObject.h CgBase/CgBasePointCloud.h CgBase/CgBaseTriangleMesh.h CgBase/CgBasePolyline.h CgBase/CgBaseSceneControl.h CgQtViewer/CgQtGlBufferObject.h CgQtViewer/CgTrackball.h CgEvents/CgWindowResizeEvent.h CgSceneGraph/CgTriangleMesh.h CgUtils/ObjLoader.h CgBase/CgBaseImage.h CgEvents/CgTrackballEvent.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CgEvents/CgLoadHalfEdgeMeshEvent.cpp CgEvents/CgLoadMeshEvent.cpp CgEvents/CgLoadPointCloudEvent.cpp CgEvents/CgPickRayEvent.cpp CgEvents/CgSplatEvent.cpp CgMath/CgEigenDecomposition3x3.cpp CgQtViewer/CGQtGLRenderWidget.cpp CgQtViewer/CgQtGui.cpp CgBase/CgObservable.cpp CgEvents/CgMouseEvent.cpp CgQtViewer/CgQtMainApplication.cpp CgSceneGraph/CgHalfEdgePrimitives.cpp CgSceneGraph/CgHalfEdgeTriangleMesh.cpp CgSceneGraph/CgPointCloud.cpp CgSceneGraph/CgPolyLine.cpp CgSceneGraph/CgSceneControl.cpp CgEvents/CgKeyEvent.cpp CgEvents/CgButtonClickEvent.cpp CgQtViewer/CgQtGlBufferObject.cpp CgQtViewer/CgTrackball.cpp CgEvents/CgWindowResizeEvent.cpp CgSceneGraph/CgTriangleMesh.cpp CgUtils/ObjLoader.cpp CgEvents/CgTrackballEvent.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -463,18 +470,18 @@ moc_CgQtGLRenderWidget.cpp: CgQtViewer/CgQtGLRenderWidget.h \
 		CgBase/CgBaseRenderer.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /mnt/f/Studium/ComputationalGeometry/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/f/Studium/ComputationalGeometry -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CgQtViewer/CgQtGLRenderWidget.h -o moc_CgQtGLRenderWidget.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /mnt/c/Users/steve/CLionProjects/ComputationalGeometry/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/steve/CLionProjects/ComputationalGeometry -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CgQtViewer/CgQtGLRenderWidget.h -o moc_CgQtGLRenderWidget.cpp
 
 moc_CgQtGui.cpp: CgQtViewer/CgQtGui.h \
 		CgBase/CgObservable.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /mnt/f/Studium/ComputationalGeometry/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/f/Studium/ComputationalGeometry -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CgQtViewer/CgQtGui.h -o moc_CgQtGui.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /mnt/c/Users/steve/CLionProjects/ComputationalGeometry/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/steve/CLionProjects/ComputationalGeometry -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CgQtViewer/CgQtGui.h -o moc_CgQtGui.cpp
 
 moc_CgQtMainApplication.cpp: CgQtViewer/CgQtMainApplication.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /mnt/f/Studium/ComputationalGeometry/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/f/Studium/ComputationalGeometry -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CgQtViewer/CgQtMainApplication.h -o moc_CgQtMainApplication.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /mnt/c/Users/steve/CLionProjects/ComputationalGeometry/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/steve/CLionProjects/ComputationalGeometry -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CgQtViewer/CgQtMainApplication.h -o moc_CgQtMainApplication.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -767,7 +774,13 @@ CgQtGui.o: CgQtViewer/CgQtGui.cpp CgQtViewer/CgQtGLRenderWidget.h \
 		CgEvents/CgLoadPointCloudEvent.h \
 		CgEvents/CgTrackballEvent.h \
 		CgEvents/CgSplatEvent.h \
-		CgEvents/CgPickRayEvent.h
+		CgEvents/CgPickRayEvent.h \
+		CgEvents/CgButtonClickEvent.h \
+		CgSceneGraph/CgHalfEdgeTriangleMesh.h \
+		CgBase/CgBaseHalfEdgeTriangleMesh.h \
+		CgBase/CgBaseRenderableObject.h \
+		CgBase/CgBaseHalfdgePrimitives.h \
+		CgSceneGraph/CgHalfEdgePrimitives.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgQtGui.o CgQtViewer/CgQtGui.cpp
 
 CgObservable.o: CgBase/CgObservable.cpp CgBase/CgObservable.h \
@@ -826,6 +839,7 @@ CgSceneControl.o: CgSceneGraph/CgSceneControl.cpp CgSceneGraph/CgSceneControl.h 
 		CgEvents/CgTrackballEvent.h \
 		CgEvents/CgSplatEvent.h \
 		CgEvents/CgPickRayEvent.h \
+		CgEvents/CgButtonClickEvent.h \
 		CgBase/CgBaseRenderer.h \
 		CgSceneGraph/CgPointCloud.h \
 		CgBase/CgBasePointCloud.h \
@@ -1012,6 +1026,11 @@ CgKeyEvent.o: CgEvents/CgKeyEvent.cpp CgEvents/CgKeyEvent.h \
 		CgBase/CgBaseEvent.h \
 		CgBase/CgEnums.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgKeyEvent.o CgEvents/CgKeyEvent.cpp
+
+CgButtonClickEvent.o: CgEvents/CgButtonClickEvent.cpp CgEvents/CgButtonClickEvent.h \
+		CgBase/CgBaseEvent.h \
+		CgBase/CgEnums.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgButtonClickEvent.o CgEvents/CgButtonClickEvent.cpp
 
 CgQtGlBufferObject.o: CgQtViewer/CgQtGlBufferObject.cpp CgQtViewer/CgQtGlBufferObject.h \
 		CgBase/CgBasePolyline.h \
