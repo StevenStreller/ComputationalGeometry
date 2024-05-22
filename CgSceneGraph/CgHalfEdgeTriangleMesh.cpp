@@ -159,9 +159,9 @@ void CgHalfEdgeTriangleMesh::subdivision() {
         newFace->m_edge = n1;
 
         // Setze die Farbe für die Kanten
-        nv1->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
-        nv2->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
-        nv3->m_color = glm::vec3(1.0f, 0.0f, 0.0f);
+        nv1->m_color = glm::vec3(0.0, 1.0, 0.0);
+        nv2->m_color = glm::vec3(0.0, 1.0, 0.0);
+        nv3->m_color = glm::vec3(0.0, 1.0, 0.0);
 
         // Füge die neuen Vertices in die Liste der Vertices ein
         temp_m_verts.push_back(nv1);
