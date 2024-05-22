@@ -43,6 +43,9 @@ public:
     glm::vec3 m_position;
     glm::vec3 m_color;
 
+    //added
+    glm::vec3 m_normal;
+
 };
 
 class CgHeEdge : public CgBaseHeEdge

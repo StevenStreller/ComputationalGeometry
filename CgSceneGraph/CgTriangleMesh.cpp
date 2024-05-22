@@ -48,10 +48,31 @@ m_id(id)
          glm::vec3 normal = glm::cross(v1,v2);
 
          m_face_normals.push_back(normal);
+
     }
 
 
 }
+
+
+CgTriangleMesh::CgTriangleMesh(const std::vector<glm::vec3>& triangleVertices, const std::vector<glm::vec3>& vertexNormals,
+                               const std::vector<glm::vec3>& vertexColors): m_type(Cg::TriangleMesh), m_id(420)
+{
+    for(int i=0; i<triangleVertices.size(); i++){
+        m_vertices.push_back(triangleVertices[i]);
+        m_vertex_normals.push_back(vertexNormals[i]);
+        m_vertex_colors.push_back(vertexColors[i]);
+        m_triangle_indices.push_back(i);
+        if(i%3 == 0){
+            m_face_normals.push_back(vertexNormals[i]);
+            m_face_colors.push_back(vertexColors[i]);
+        }
+
+    }
+
+
+}
+
 
 
 

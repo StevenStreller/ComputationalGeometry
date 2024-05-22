@@ -13,6 +13,8 @@
 int main(int argc, char **argv) {
 
 
+
+
     /*************************************************************************************/
     /*   View: Qt-Anwendung und QtGL-View erzeugen                                       */
     /*************************************************************************************/
@@ -20,7 +22,7 @@ int main(int argc, char **argv) {
 
     QApplication app(argc, argv);
 
-       QCoreApplication::setApplicationName("Übung Computational Geometry -  Sommer 2024");
+       QCoreApplication::setApplicationName("Übung Computational Geometry -  Sommer 2022");
        QCoreApplication::setOrganizationName("QtProject");
        QCoreApplication::setApplicationVersion(QT_VERSION_STR);
        QCommandLineParser parser;
@@ -82,6 +84,7 @@ int main(int argc, char **argv) {
    /*************************************************************************************/
 
        //  innerhalbb der SceneControl Klasse,
+
 
 
     return app.exec();

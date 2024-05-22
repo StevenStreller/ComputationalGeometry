@@ -4,6 +4,7 @@
 #include "CgBase/CgObserver.h"
 #include "CgBase/CgBaseSceneControl.h"
 #include <glm/glm.hpp>
+#include "CgLeastSquares.h"
 
 class CgBaseEvent;
 class CgBaseRenderer;
@@ -55,6 +56,13 @@ private:
 
     // interface for OpenGl Rendering
     CgBaseRenderer* m_renderer;
+
+    //K-Nearest Neighbors parameters from GUI
+    int kNearestValue = 20;
+    int kNearestIndex = 0;
+    int kdDepthValue = 0;
+    bool showSmoothingMesh = false;
+    CgLeastSquares::BaseFunction smoothingBaseFunction = CgLeastSquares::biquadratic;
 
 };
 

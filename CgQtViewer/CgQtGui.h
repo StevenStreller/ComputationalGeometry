@@ -99,9 +99,18 @@ private:
     /* example for usage of qt gui elements, feel free to add what you like */
     void createOptionPanelExample1(QWidget* panel);
     void createOptionPanelExample2(QWidget* panel);
-    QButtonGroup* myButtonGroup;
-    QCheckBox* myCheckBox1;
-    QSpinBox* mySpinBox1;
+    QButtonGroup* smoothingRadioButtonGroup;
+    //QCheckBox* checkboxShowKdTree;
+    QSpinBox* kdDepthSpinBox;
+
+    QSpinBox* kNearestSelectedIndexSpinBox;
+    QSpinBox* kNearestSelectedKSpinBox;
+
+    QPushButton* subdivideButton;
+
+    QPushButton* smoothButton;
+
+    QCheckBox* showFitFunctionCheckbox;
 
 
     bool m_use_spats;
@@ -117,10 +126,14 @@ private slots:
     void slotTrackballChanged();
 
     /* slots example qt gui elements */
-    void slotMySpinBox1Changed();
-    void slotMyCheckBox1Changed();
-    void slotMyButton1Pressed();
-    void slotButtonGroupSelectionChanged();
+    void slotKNearestSpinboxIndexChanged();
+    void slotKNearestSpinboxKValueChanged();
+    //void slotCheckboxShowKdTreeClicked();
+    void slotKdDepthSpinBoxValueChanged();
+    void slotCheckboxShowSmoothingClicked();
+    void slotSubdivideButtonPressed();
+    void slotSmoothButtonPressed();
+    void slotButtonGroupSmoothingSelectionChanged();
     void slotLoadMeshFile();
     void slotLoadHalfEdgeFile();
     void slotLoadPointCloudFile();

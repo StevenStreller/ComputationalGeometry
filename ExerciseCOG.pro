@@ -1,15 +1,22 @@
 QT       += core gui opengl widgets
 TEMPLATE = app
 TARGET = PointViewer
-QMAKE_CXXFLAGS += -std=c++11
-CONFIG += c++11
+
+CONFIG += c++17
+DEFINES +=  _USE_MATH_DEFINES
+LIBS += opengl32.lib
+
 
 SOURCES += main.cpp \
+    CgEvents/CgCheckboxClickedEvent.cpp \
     CgEvents/CgLoadHalfEdgeMeshEvent.cpp \
     CgEvents/CgLoadMeshEvent.cpp \
     CgEvents/CgLoadPointCloudEvent.cpp \
     CgEvents/CgPickRayEvent.cpp \
+    CgEvents/CgRadioButtonClickedEvent.cpp \
+    CgEvents/CgSpinBoxChangedEvent.cpp \
     CgEvents/CgSplatEvent.cpp \
+    CgEvents/CgButtonClickEvent.cpp \
     CgMath/CgEigenDecomposition3x3.cpp \
     CgQtViewer/CGQtGLRenderWidget.cpp \
     CgQtViewer/CgQtGui.cpp \
@@ -18,11 +25,12 @@ SOURCES += main.cpp \
     CgQtViewer/CgQtMainApplication.cpp \
     CgSceneGraph/CgHalfEdgePrimitives.cpp \
     CgSceneGraph/CgHalfEdgeTriangleMesh.cpp \
+    CgSceneGraph/CgKdTree.cpp \
+    CgSceneGraph/CgLeastSquares.cpp \
     CgSceneGraph/CgPointCloud.cpp \
     CgSceneGraph/CgPolyLine.cpp \
     CgSceneGraph/CgSceneControl.cpp \
     CgEvents/CgKeyEvent.cpp \
-    CgEvents/CgButtonClickEvent.cpp \
     CgQtViewer/CgQtGlBufferObject.cpp \
     CgQtViewer/CgTrackball.cpp \
     CgEvents/CgWindowResizeEvent.cpp \
@@ -33,11 +41,15 @@ SOURCES += main.cpp \
 HEADERS += \
     CgBase/CgBaseHalfEdgeTriangleMesh.h \
     CgBase/CgBaseHalfdgePrimitives.h \
+    CgEvents/CgCheckboxClickedEvent.h \
     CgEvents/CgLoadHalfEdgeMeshEvent.h \
     CgEvents/CgLoadMeshEvent.h \
     CgEvents/CgLoadPointCloudEvent.h \
     CgEvents/CgPickRayEvent.h \
+    CgEvents/CgRadioButtonClickedEvent.h \
+    CgEvents/CgSpinBoxChangedEvent.h \
     CgEvents/CgSplatEvent.h \
+    CgEvents/CgButtonClickEvent.h \
     CgMath/CgEigenDecomposition3x3.h \
     CgMath/Eigen/Core \
     CgMath/Eigen/Eigen \
@@ -52,11 +64,12 @@ HEADERS += \
     CgQtViewer/CgQtMainApplication.h \
     CgSceneGraph/CgHalfEdgePrimitives.h \
     CgSceneGraph/CgHalfEdgeTriangleMesh.h \
+    CgSceneGraph/CgKdTree.h \
+    CgSceneGraph/CgLeastSquares.h \
     CgSceneGraph/CgPointCloud.h \
     CgSceneGraph/CgPolyLine.h \
     CgSceneGraph/CgSceneControl.h \
     CgEvents/CgKeyEvent.h \
-    CgEvents/CgButtonClickEvent.h \
     CgBase/CgBaseRenderer.h \
     CgBase/CgBaseRenderableObject.h \
     CgBase/CgBasePointCloud.h \

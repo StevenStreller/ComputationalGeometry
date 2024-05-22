@@ -13,7 +13,7 @@ class CgTriangleMesh : public CgBaseTriangleMesh
 public:
     CgTriangleMesh();
     CgTriangleMesh(int id);
-
+    CgTriangleMesh(const std::vector<glm::vec3>& triangleVertices, const std::vector<glm::vec3>& vertexNormals, const std::vector<glm::vec3>& vertexColors);
     ~CgTriangleMesh();
 
     //inherited from CgBaseRenderableObject
