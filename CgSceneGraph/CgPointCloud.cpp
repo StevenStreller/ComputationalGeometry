@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 #include <iostream>
+#include <cmath>
+#include <functional>
 
 CgPointCloud::Node::Node(const glm::vec3 &point)
         : location(point), leftChild(nullptr), rightChild(nullptr) {}
@@ -72,6 +74,11 @@ void CgPointCloud::init(std::string filename, bool cheat_normals) {
     if (root) {
         std::cout << "Root node location: (" << root->location.x << ", " << root->location.y << ", " << root->location.z
                   << ")\n";
+
+        Node* test = getNeighbor(glm::vec3(0,1,0), root);
+        std::cout << "Nachbar node location: (" << test->location.x << ", " << test->location.y << ", " << test->location.z
+                  << ")\n";
+
     } else {
         std::cout << "The KD-tree is empty.\n";
     }
@@ -190,3 +197,59 @@ const std::vector<glm::vec2> &CgPointCloud::getSplatScalings() const {
     return m_splat_scaling;
 }
 
+CgPointCloud::Node *CgPointCloud::getNeighbor(glm::vec3 vec3, Node* root) {
+    // Initialisierung des nächsten Nachbarn und der minimalen Distanz
+    Node* best = nullptr;
+    double bestDist = std::numeric_limits<double>::max();
+
+    // Hilfsfunktion zur rekursiven Suche im k-d-Baum
+    std::function<void(Node*, int)> searchTree = [&](Node* node, int depth) {
+        if (node == nullptr) {
+            return;
+        }
+
+        // Berechne die Distanz vom aktuellen Knoten zum Zielpunkt
+        double dist = calcDistance(&vec3, &node->location);
+        if (dist < bestDist) {
+            bestDist = dist;
+            best = node;
+        }
+
+        // Bestimme die aktuelle Achse
+        int axis = depth % 3;
+        double diff = 0;
+
+        if (axis == 0) {
+            diff = vec3.x - node->location.x;
+        } else if (axis == 1) {
+            diff = vec3.y - node->location.y;
+        } else if (axis == 2) {
+            diff = vec3.z - node->location.z;
+        }
+
+        // Wähle den nächsten Teilbaum basierend auf dem Vergleich
+        Node* nextNode = (diff < 0) ? node->leftChild : node->rightChild;
+        Node* otherNode = (diff < 0) ? node->rightChild : node->leftChild;
+
+        // Suche im nächsten Teilbaum
+        searchTree(nextNode, depth + 1);
+
+        // Falls der andere Teilbaum auch relevant sein könnte, suche auch dort
+        if (fabs(diff) < bestDist) {
+            searchTree(otherNode, depth + 1);
+        }
+    };
+
+    // Starte die rekursive Suche vom Wurzelknoten
+    searchTree(root, 0);
+
+    return best;
+}
+
+double CgPointCloud::calcDistance(const glm::vec3* p1, const glm::vec3* p2) {
+    return std::sqrt(
+            std::pow(p2->x - p1->x, 2) +
+            std::pow(p2->y - p1->y, 2) +
+            std::pow(p2->z - p1->z, 2)
+    );
+}

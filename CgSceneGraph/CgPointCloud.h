@@ -20,7 +20,9 @@ public:
         Node(const glm::vec3 &point);
     };
 
-    Node* kdtree(std::vector<glm::vec3>& pointList);
+    Node *getNeighbor(glm::vec3 vec3, Node *root);
+
+    Node *kdtree(std::vector<glm::vec3> &pointList);
 
     ~CgPointCloud();
 
@@ -58,7 +60,9 @@ public:
 
 private:
 
-    Node* buildKdTree(std::vector<glm::vec3>::iterator begin, std::vector<glm::vec3>::iterator end, int depth);
+    double calcDistance(const glm::vec3 *p1, const glm::vec3 *p2);
+
+    Node *buildKdTree(std::vector<glm::vec3>::iterator begin, std::vector<glm::vec3>::iterator end, int depth);
 
     // the following demonstration methods have to be replaced by your own calculations
 
