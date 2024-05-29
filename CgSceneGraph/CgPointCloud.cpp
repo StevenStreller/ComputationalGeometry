@@ -75,8 +75,9 @@ void CgPointCloud::init(std::string filename, bool cheat_normals) {
         std::cout << "Root node location: (" << root->location.x << ", " << root->location.y << ", " << root->location.z
                   << ")\n";
 
-        Node* test = getNeighbor(glm::vec3(0,1,0), root);
-        std::cout << "Nachbar node location: (" << test->location.x << ", " << test->location.y << ", " << test->location.z
+        Node *test = getNeighbor(glm::vec3(0, 1, 0), root);
+        std::cout << "Nachbar node location: (" << test->location.x << ", " << test->location.y << ", "
+                  << test->location.z
                   << ")\n";
 
     } else {
@@ -153,12 +154,13 @@ glm::vec3 CgPointCloud::getPerpendicularVector(glm::vec3 arg) {
 }
 
 // Implementierung der kdtree Methode
-CgPointCloud::Node* CgPointCloud::kdtree(std::vector<glm::vec3>& pointList) {
+CgPointCloud::Node *CgPointCloud::kdtree(std::vector<glm::vec3> &pointList) {
     return buildKdTree(pointList.begin(), pointList.end(), 0);
 }
 
 // Implementierung der buildKdTree Methode
-CgPointCloud::Node* CgPointCloud::buildKdTree(std::vector<glm::vec3>::iterator begin, std::vector<glm::vec3>::iterator end, int depth) {
+CgPointCloud::Node *
+CgPointCloud::buildKdTree(std::vector<glm::vec3>::iterator begin, std::vector<glm::vec3>::iterator end, int depth) {
     if (begin == end) {
         return nullptr;
     }
@@ -168,13 +170,13 @@ CgPointCloud::Node* CgPointCloud::buildKdTree(std::vector<glm::vec3>::iterator b
 
     // Verwenden Sie std::nth_element, um den Median in-place zu finden
     auto mid = begin + (end - begin) / 2;
-    std::nth_element(begin, mid, end, [axis](const glm::vec3& a, const glm::vec3& b) {
+    std::nth_element(begin, mid, end, [axis](const glm::vec3 &a, const glm::vec3 &b) {
         if (axis == 0) return a.x < b.x;
         else if (axis == 1) return a.y < b.y;
         else return a.z < b.z;
     });
 
-    Node* node = new Node(*mid);
+    Node *node = new Node(*mid);
 
     // Erstellen Sie die linken und rechten Unterbäume rekursiv
     node->leftChild = buildKdTree(begin, mid, depth + 1);
@@ -197,13 +199,13 @@ const std::vector<glm::vec2> &CgPointCloud::getSplatScalings() const {
     return m_splat_scaling;
 }
 
-CgPointCloud::Node *CgPointCloud::getNeighbor(glm::vec3 vec3, Node* root) {
+CgPointCloud::Node *CgPointCloud::getNeighbor(glm::vec3 vec3, Node *root) {
     // Initialisierung des nächsten Nachbarn und der minimalen Distanz
-    Node* best = nullptr;
+    Node *best = nullptr;
     double bestDist = std::numeric_limits<double>::max();
 
     // Hilfsfunktion zur rekursiven Suche im k-d-Baum
-    std::function<void(Node*, int)> searchTree = [&](Node* node, int depth) {
+    std::function<void(Node *, int)> searchTree = [&](Node *node, int depth) {
         if (node == nullptr) {
             return;
         }
@@ -228,8 +230,8 @@ CgPointCloud::Node *CgPointCloud::getNeighbor(glm::vec3 vec3, Node* root) {
         }
 
         // Wähle den nächsten Teilbaum basierend auf dem Vergleich
-        Node* nextNode = (diff < 0) ? node->leftChild : node->rightChild;
-        Node* otherNode = (diff < 0) ? node->rightChild : node->leftChild;
+        Node *nextNode = (diff < 0) ? node->leftChild : node->rightChild;
+        Node *otherNode = (diff < 0) ? node->rightChild : node->leftChild;
 
         // Suche im nächsten Teilbaum
         searchTree(nextNode, depth + 1);
@@ -244,4 +246,12 @@ CgPointCloud::Node *CgPointCloud::getNeighbor(glm::vec3 vec3, Node* root) {
     searchTree(root, 0);
 
     return best;
+}
+
+double CgPointCloud::calcDistance(glm::vec3 *a, glm::vec3 *b) {
+    return std::sqrt(
+            std::pow(b->x - a->x, 2) +
+            std::pow(b->y - a->y, 2) +
+            std::pow(b->z - a->z, 2)
+    );
 }

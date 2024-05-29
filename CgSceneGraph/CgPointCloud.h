@@ -21,7 +21,6 @@ public:
     };
 
     Node* getNeighbor(glm::vec3 vec3, Node* root);
-    double calcDistance(glm::vec3 *a, glm::vec3 *b);
 
     Node* kdtree(std::vector<glm::vec3>& pointList);
 
@@ -60,6 +59,8 @@ public:
     const glm::vec3 getCenter() const;
 
 private:
+
+    double calcDistance(glm::vec3 *a, glm::vec3 *b);
 
     Node* buildKdTree(std::vector<glm::vec3>::iterator begin, std::vector<glm::vec3>::iterator end, int depth);
 
