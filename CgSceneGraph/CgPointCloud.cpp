@@ -248,6 +248,25 @@ CgPointCloud::Node *CgPointCloud::getNeighbor(glm::vec3 vec3, Node *root) {
     return best;
 }
 
+int CgPointCloud::pickNearestPoint(glm::vec3 rayStart, glm::vec3 rayEnd, int kVal, CgTriangleMesh** mesh)
+{
+    //Line(t) = rayStart + t * rayEnd-rayStart
+    std::cout << "Ray start: " << rayStart.x << " Ray end: " << rayEnd.x << std::endl;
+
+    glm::vec3 rayDir = glm::normalize(rayEnd - rayStart);
+    float currentMinDistance = std::numeric_limits<float>::max();
+    int currentBest = 0;
+    for(int i=0; i<m_vertices.size(); i++)
+    {
+        float t = glm::dot(rayDir, m_vertices[i]-rayStart);
+        float distance = glm::pow(glm::length(m_vertices[i] - (rayStart + t * rayDir)),2);
+        if(distance < currentMinDistance){
+            currentMinDistance = distance;
+            currentBest = i;
+        }
+    }
+}
+
 double CgPointCloud::calcDistance(glm::vec3 *a, glm::vec3 *b) {
     return std::sqrt(
             std::pow(b->x - a->x, 2) +

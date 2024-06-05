@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include "CgBase/CgBasePointCloud.h"
+#include "CgSceneGraph/CgTriangleMesh.h"
 
 class CgPointCloud : public CgBasePointCloud {
 public:
@@ -58,6 +59,21 @@ public:
     // the center of gravity of the object, for rendering
     const glm::vec3 getCenter() const;
 
+    // for demonstration purposes, very inefficient (eigentlich private)
+    std::vector<int> getNearestNeighbors(int current_point, unsigned int k);
+
+    /**
+     * @brief pickNearestPoint ray picking
+     * @param rayStart picking ray start
+     * @param rayDir picking ray direction
+     * @param kVal neighbors count to find
+     * @param showSmoothMesh if true mesh pointer will be swapped for least squares approximation function
+     * @param mesh pointer to pointer of mesh where the visualization should be set
+     * @param baseFunction for least squares visualization
+     * @return index of Node that was found
+     */
+    int pickNearestPoint(glm::vec3 rayStart, glm::vec3 rayDir, int kVal, CgTriangleMesh** mesh);
+
 private:
 
     double calcDistance(glm::vec3 *a, glm::vec3 *b);
@@ -72,8 +88,6 @@ private:
     // for demonstration: for a given normal direction find an arbitrary vector to span the tangent plane
     glm::vec3 getPerpendicularVector(glm::vec3 arg);
 
-    // for demonstration purposes, very inefficient
-    std::vector<int> getNearestNeighbors(int current_point, unsigned int k);
 
 
     std::vector<glm::vec3> m_vertices;

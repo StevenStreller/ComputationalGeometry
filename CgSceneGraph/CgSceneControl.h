@@ -56,6 +56,12 @@ private:
     // interface for OpenGl Rendering
     CgBaseRenderer* m_renderer;
 
+    //K-Nearest Neighbors parameters from GUI
+    int kNearestValue = 20;
+    int kNearestIndex = 2;
+    int kdDepthValue = 0;
+    bool showSmoothingMesh = false;
+
 };
 
 #endif // CGSCENECONTROL_H

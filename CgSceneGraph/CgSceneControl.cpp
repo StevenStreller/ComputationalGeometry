@@ -12,6 +12,7 @@
 #include "CgEvents/CgSplatEvent.h"
 #include "CgEvents/CgPickRayEvent.h"
 #include "CgEvents/CgButtonClickEvent.h"
+#include "CgPointCloud.h"
 
 #include "CgBase/CgBaseRenderer.h"
 #include "CgPointCloud.h"
@@ -114,6 +115,14 @@ void CgSceneControl::calculatePickRay(double x, double y) {
     m_select_ray = new CgPolyLine(33, pointlist);
     m_renderer->init(m_select_ray);
 
+    // std::cout << "x: " << x << " y: " << y << std::endl;
+
+    if(m_pointcloud != nullptr){
+        int pointIndex = m_pointcloud->pickNearestPoint(raystart, rayend, kNearestValue, &m_triangle_mesh);
+        // m_pointcloud->markKNearest(pointIndex, kNearestValue);
+        std::cout << "index: " << pointIndex << std::endl;
+        m_renderer->init(m_pointcloud);
+    }
 
     m_renderer->redraw();
 }
