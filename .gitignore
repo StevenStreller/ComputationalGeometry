@@ -1,0 +1,7 @@
+*.o
+PointViewer
+*.cpp
+Makefile
+.qmake.stash
+*.xml
+*.h
