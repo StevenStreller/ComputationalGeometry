@@ -75,7 +75,7 @@ void CgHalfEdgeTriangleMesh::smoothWithLeastSquares(CgLeastSquares::BaseFunction
         int iter = 0;
         for(auto& v : neighbors)
         {
-            if(!(isnan(smoothVerts[iter].x) || isnan(smoothVerts[iter].y) || isnan(smoothVerts[iter].z))){
+            if(!(std::isnan(smoothVerts[iter].x) || std::isnan(smoothVerts[iter].y) || std::isnan(smoothVerts[iter].z))){
 
                 auto find = positionSumsCounts.find(v);
                 if(find == positionSumsCounts.end()){
