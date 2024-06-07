@@ -1,10 +1,8 @@
 QT       += core gui opengl widgets
 TEMPLATE = app
 TARGET = PointViewer
-
-CONFIG += c++17
-DEFINES +=  _USE_MATH_DEFINES
-LIBS += opengl32.lib
+QMAKE_CXXFLAGS += -std=c++11
+CONFIG += c++11
 
 
 SOURCES += main.cpp \
