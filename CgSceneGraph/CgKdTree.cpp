@@ -7,152 +7,47 @@
 #include <tuple>
 
 
-CgKdTree::CgKdTree(const std::vector <glm::vec3> &points) {
-
-    if (points.empty())
-        return;
-
-    //create tree
-
-    //Nodes left have coord smaller than
-    //right have greater equal
-
-    for (int i = 0; i < points.size(); i++) {
-        nodes.push_back(new Node(i, points[i]));
+CgKdTree::CgKdTree(const std::vector<glm::vec3> &points) {
+    // Vektor von Paaren (Index, Punkt) erstellen, um die Indizes zu verfolgen
+    std::vector<std::pair<int, glm::vec3>> indexedPoints;
+    for (int i = 0; i < points.size(); ++i) {
+        // Neues Paar (Index, Punkt) am Ende des Vektors erzeugen
+        indexedPoints.emplace_back(i, points[i]);
     }
 
-    //The idea is to sort nodes vector (or parts of it by x then y then z then x... coordinates and always find mid element as next branch
+    // KD-Baum aus den indizierten Punkten erstellen und root setzen
+    root = buildKdTree(indexedPoints.begin(), indexedPoints.end(), 0, nullptr);
+}
 
-    std::sort(nodes.begin(), nodes.end(), [](const Node *a, const Node *b) {
-        return a->position.x < b->position.x;
+
+CgKdTree::Node *CgKdTree::buildKdTree(std::vector<std::pair<int, glm::vec3>>::iterator begin,
+                                      std::vector<std::pair<int, glm::vec3>>::iterator end, int depth,
+                                      CgKdTree::Node *parent) {
+    // Wenn der Bereich leer ist, gibt es keinen Knoten zu erstellen, also null zurückgeben
+    if (begin == end) {
+        return nullptr;
+    }
+
+    int k = 3;  // Anzahl der Dimensionen (x, y, z)
+    int axis = depth % k;  // Bestimmen der Achse für die aktuelle Tiefe
+
+    // std::nth_element verwenden, um das Median-Element im aktuellen Bereich in-place zu finden
+    auto mid = begin + (end - begin) / 2;
+    std::nth_element(begin, mid, end, [axis](const std::pair<int, glm::vec3> &a, const std::pair<int, glm::vec3> &b) {
+        if (axis == 0) return a.second.x < b.second.x;  // Vergleichen nach der x-Achse
+        else if (axis == 1) return a.second.y < b.second.y;  // Vergleichen nach der y-Achse
+        else return a.second.z < b.second.z;  // Vergleichen nach der z-Achse
     });
 
-    // index of left of / right of and depth and parent
-    std::stack <std::tuple<int, int, int, int>> midPts;
+    // Neuen Knoten mit dem Index und der Position des Median-Elements erstellen
+    Node *node = new Node(mid->first, mid->second);
+    node->parent = parent;  // Den Elternelement setzen
 
-    //list start, list end, node num, node itself, depth
+    // Rekursiv die linken und rechten Unterbäume erstellen
+    node->left = buildKdTree(begin, mid, depth + 1, node);
+    node->right = buildKdTree(mid + 1, end, depth + 1, node);
 
-    //correct root - first of nodes with same coordinate must be taken as root to make
-    //less than and more equal than correctly
-    size_t rootIdx = nodes.size() / 2;
-    while (rootIdx > 0 && nodes[rootIdx]->position.x == nodes[rootIdx - 1]->position.x) {
-        rootIdx--;
-    }
-
-    root = nodes[rootIdx];
-    root->parent = nullptr;
-
-    //Stack is used to avoid recursion, nodes are reordered in place
-    midPts.push({0, nodes.size(), 0, rootIdx});
-
-    while (!midPts.empty()) {
-        auto top = midPts.top();
-        midPts.pop();
-
-        int listStart = std::get<0>(top);
-        int listEnd = std::get<1>(top);
-        int depth = std::get<2>(top);
-        int nodeNumber = std::get<3>(top);
-        Node *thisNode = nodes[nodeNumber];
-
-        if (depth % 3 == 0) {
-            //was divided by x, now must do by y
-            std::sort(nodes.begin() + listStart, nodes.begin() + nodeNumber, [](const Node *a, const Node *b) {
-                return a->position.y < b->position.y;
-            });
-
-            std::sort(nodes.begin() + nodeNumber + 1, nodes.begin() + listEnd, [](const Node *a, const Node *b) {
-                return a->position.y < b->position.y;
-            });
-
-            //if not leafNodes then continue on
-            if (listStart != nodeNumber) {
-                int nodeIdxLeft = (listStart + nodeNumber) / 2;
-                while (nodeIdxLeft > listStart &&
-                       nodes[nodeIdxLeft]->position.y == nodes[nodeIdxLeft - 1]->position.y) {
-                    nodeIdxLeft--;
-                }
-                thisNode->left = nodes[nodeIdxLeft];
-                thisNode->left->parent = thisNode;
-                midPts.push({listStart, nodeNumber, depth + 1, nodeIdxLeft});
-            }
-
-            if (listEnd != nodeNumber + 1) {
-                int nodeIdxRight = (listEnd + nodeNumber + 1) / 2;
-                while (nodeIdxRight > (nodeNumber + 1) &&
-                       nodes[nodeIdxRight]->position.y == nodes[nodeIdxRight - 1]->position.y) {
-                    nodeIdxRight--;
-                }
-                thisNode->right = nodes[nodeIdxRight];
-                thisNode->right->parent = thisNode;
-                midPts.push({nodeNumber + 1, listEnd, depth + 1, nodeIdxRight});
-            }
-
-        } else if (depth % 3 == 1) {
-            //was divided by y, now must do by z
-            std::sort(nodes.begin() + listStart, nodes.begin() + nodeNumber, [](const Node *a, const Node *b) {
-                return a->position.z < b->position.z;
-            });
-            std::sort(nodes.begin() + nodeNumber + 1, nodes.begin() + listEnd, [](const Node *a, const Node *b) {
-                return a->position.z < b->position.z;
-            });
-
-
-            if (listStart != nodeNumber) {
-                int nodeIdxLeft = (listStart + nodeNumber) / 2;
-                while (nodeIdxLeft > listStart &&
-                       nodes[nodeIdxLeft]->position.z == nodes[nodeIdxLeft - 1]->position.z) {
-                    nodeIdxLeft--;
-                }
-                thisNode->left = nodes[nodeIdxLeft];
-                thisNode->left->parent = thisNode;
-                midPts.push({listStart, nodeNumber, depth + 1, nodeIdxLeft});
-            }
-
-            if (listEnd != nodeNumber + 1) {
-                int nodeIdxRight = (listEnd + nodeNumber + 1) / 2;
-                while (nodeIdxRight > (nodeNumber + 1) &&
-                       nodes[nodeIdxRight]->position.z == nodes[nodeIdxRight - 1]->position.z) {
-                    nodeIdxRight--;
-                }
-                thisNode->right = nodes[nodeIdxRight];
-                thisNode->right->parent = thisNode;
-                midPts.push({nodeNumber + 1, listEnd, depth + 1, nodeIdxRight});
-            }
-
-        } else {
-            //was divided by z, now must do by x
-            std::sort(nodes.begin() + listStart, nodes.begin() + nodeNumber, [](const Node *a, const Node *b) {
-                return a->position.x < b->position.x;
-            });
-            std::sort(nodes.begin() + nodeNumber + 1, nodes.begin() + listEnd, [](const Node *a, const Node *b) {
-                return a->position.x < b->position.x;
-            });
-
-
-            if (listStart != nodeNumber) {
-                int nodeIdxLeft = (listStart + nodeNumber) / 2;
-                while (nodeIdxLeft > listStart &&
-                       nodes[nodeIdxLeft]->position.x == nodes[nodeIdxLeft - 1]->position.x) {
-                    nodeIdxLeft--;
-                }
-                thisNode->left = nodes[nodeIdxLeft];
-                thisNode->left->parent = thisNode;
-                midPts.push({listStart, nodeNumber, depth + 1, nodeIdxLeft});
-            }
-
-            if (listEnd != nodeNumber + 1) {
-                int nodeIdxRight = (listEnd + nodeNumber + 1) / 2;
-                while (nodeIdxRight > (nodeNumber + 1) &&
-                       nodes[nodeIdxRight]->position.x == nodes[nodeIdxRight - 1]->position.x) {
-                    nodeIdxRight--;
-                }
-                thisNode->right = nodes[nodeIdxRight];
-                thisNode->right->parent = thisNode;
-                midPts.push({nodeNumber + 1, listEnd, depth + 1, nodeIdxRight});
-            }
-        }
-    }
+    return node;  // Den aktuellen Knoten zurückgeben
 }
 
 
@@ -210,7 +105,7 @@ CgKdTree::Node *CgKdTree::findNearestNodeByPoint(glm::vec3 pt) {
 }
 
 
-void CgKdTree::findNextKNearest(std::vector <std::pair<float, Node *>> &foundNodes, int depth, glm::vec3 refPt,
+void CgKdTree::findNextKNearest(std::vector<std::pair<float, Node *>> &foundNodes, int depth, glm::vec3 refPt,
                                 Node *current) {
 
     Node *firstTry = nullptr;
@@ -272,7 +167,7 @@ void CgKdTree::findNextKNearest(std::vector <std::pair<float, Node *>> &foundNod
 
 std::vector<int> CgKdTree::getKNearestNeighbors(glm::vec3 point, int k) {
 
-    std::vector <std::pair<float, Node *>> foundNodes;
+    std::vector<std::pair<float, Node *>> foundNodes;
 
     for (int i = 0; i < k; i++)
         foundNodes.push_back({std::numeric_limits<float>::max(), nullptr});
@@ -294,7 +189,7 @@ void CgKdTree::getSplitPlane(glm::vec3 &min, glm::vec3 &max, int depth, Node *cu
     min = currentNode->position;
     max = currentNode->position;
 
-    std::stack < Node * > stack;
+    std::stack<Node *> stack;
     stack.push(currentNode);
 
     while (!stack.empty()) {
@@ -325,7 +220,7 @@ void CgKdTree::getSplitPlane(glm::vec3 &min, glm::vec3 &max, int depth, Node *cu
 }
 
 void CgKdTree::addSplitPlanes(int currDepth, Node *currNode, int maxDepth,
-                              std::vector <std::tuple<glm::vec3, glm::vec3, int>> &planes) {
+                              std::vector<std::tuple<glm::vec3, glm::vec3, int>> &planes) {
     //max depth = 1 so only 0th plane is made
     if (currDepth >= maxDepth || currNode == nullptr)
         return;
@@ -389,7 +284,7 @@ void CgKdTree::clampSplitPlane(glm::vec3 &min, glm::vec3 &max, int depth, Node *
 
 
 void CgKdTree::addSplitPlanesClamped(int currDepth, Node *currNode, int maxDepth, glm::vec3 bbmin, glm::vec3 bbmax,
-                                     std::vector <std::tuple<glm::vec3, glm::vec3, int>> &planes) {
+                                     std::vector<std::tuple<glm::vec3, glm::vec3, int>> &planes) {
     //max depth = 1 so only 0th plane is made
     if (currDepth >= maxDepth || currNode == nullptr)
         return;
@@ -418,8 +313,8 @@ void CgKdTree::addSplitPlanesClamped(int currDepth, Node *currNode, int maxDepth
 }
 
 
-std::vector <std::tuple<glm::vec3, glm::vec3, int>> CgKdTree::getSplitPlanes(int depth) {
-    std::vector <std::tuple<glm::vec3, glm::vec3, int>> planes;
+std::vector<std::tuple<glm::vec3, glm::vec3, int>> CgKdTree::getSplitPlanes(int depth) {
+    std::vector<std::tuple<glm::vec3, glm::vec3, int>> planes;
 
     addSplitPlanes(0, root, depth, planes);
     return planes;

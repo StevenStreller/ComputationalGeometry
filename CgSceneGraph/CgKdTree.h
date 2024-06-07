@@ -79,6 +79,8 @@ public:
 
 private:
 
+    Node* buildKdTree(std::vector<std::pair<int, glm::vec3>>::iterator begin, std::vector<std::pair<int, glm::vec3>>::iterator end, int depth, Node* parent);
+
     /**
      * @brief nodes list of nodes used in the tree, order is not the same as with point cloud,
      * should be used only to delete all nodes in destructor
