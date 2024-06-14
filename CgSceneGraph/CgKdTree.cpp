@@ -57,131 +57,115 @@ CgKdTree::~CgKdTree() {
 }
 
 
-CgKdTree::Node *CgKdTree::findNearestNodeByPoint(glm::vec3 pt) {
-    // Start bei der Wurzel des kd-tree
-    Node *current = root;
-    Node *lastCurrent;
-    int depth = 0;
-
-    // Durch den Baum traversieren, bis ein Blatt erreicht wird
-    while (current != nullptr) {
-        lastCurrent = current; // Speichert den letzten besuchten Knoten
-        if (current->position == pt) {
-            // Wenn der aktuelle Knoten die gleiche Position wie der gesuchte Punkt hat, wird er zurückgegeben
-            return current;
-        }
-
-        // Je nach Tiefe abwechselnd nach x, y oder z sortiert weitergehen
-        if (depth % 3 == 0) {
-            // Vergleich anhand der x-Koordinate
-            if (pt.x < current->position.x) {
-                current = current->left;
-            } else {
-                current = current->right;
-            }
-        } else if (depth % 3 == 1) {
-            // Vergleich anhand der y-Koordinate
-            if (pt.y < current->position.y) {
-                current = current->left;
-            } else {
-                current = current->right;
-            }
-        } else {
-            // Vergleich anhand der z-Koordinate
-            if (pt.z < current->position.z) {
-                current = current->left;
-            } else {
-                current = current->right;
-            }
-        }
-
-        // Tiefe erhöhen, um zur nächsten Dimension überzugehen
-        depth++;
-    }
-
-    // Wenn der genaue Punkt nicht gefunden wird, wird der zuletzt besuchte Knoten zurückgegeben
-    std::cout << "Tiefe erreicht: " << depth << " und nicht gefunden, nächster Punkt wird zurückgegeben" << std::endl;
-    return lastCurrent;
-}
+//CgKdTree::Node *CgKdTree::findNearestNodeByPoint(glm::vec3 pt) {
+//    // Start bei der Wurzel des kd-tree
+//    Node *current = root;
+//    Node *lastCurrent;
+//    int depth = 0;
+//
+//    // Durch den Baum traversieren, bis ein Blatt erreicht wird
+//    while (current != nullptr) {
+//        lastCurrent = current; // Speichert den letzten besuchten Knoten
+//        if (current->position == pt) {
+//            // Wenn der aktuelle Knoten die gleiche Position wie der gesuchte Punkt hat, wird er zurückgegeben
+//            return current;
+//        }
+//
+//        // Je nach Tiefe abwechselnd nach x, y oder z sortiert weitergehen
+//        if (depth % 3 == 0) {
+//            // Vergleich anhand der x-Koordinate
+//            if (pt.x < current->position.x) {
+//                current = current->left;
+//            } else {
+//                current = current->right;
+//            }
+//        } else if (depth % 3 == 1) {
+//            // Vergleich anhand der y-Koordinate
+//            if (pt.y < current->position.y) {
+//                current = current->left;
+//            } else {
+//                current = current->right;
+//            }
+//        } else {
+//            // Vergleich anhand der z-Koordinate
+//            if (pt.z < current->position.z) {
+//                current = current->left;
+//            } else {
+//                current = current->right;
+//            }
+//        }
+//
+//        // Tiefe erhöhen, um zur nächsten Dimension überzugehen
+//        depth++;
+//    }
+//
+//    // Wenn der genaue Punkt nicht gefunden wird, wird der zuletzt besuchte Knoten zurückgegeben
+//    std::cout << "Tiefe erreicht: " << depth << " und nicht gefunden, nächster Punkt wird zurückgegeben" << std::endl;
+//    return lastCurrent;
+//}
 
 
 void CgKdTree::findNextKNearest(std::vector<std::pair<float, Node *>> &foundNodes, int depth, glm::vec3 refPt,
                                 Node *current) {
+    if (current == nullptr) return;  // Basisfall: wenn der aktuelle Knoten null ist, beenden
 
-    Node *firstTry = nullptr;
-    Node *nextTry = nullptr;
-
+    // Berechne die euklidische Distanz zwischen dem Referenzpunkt und der Position des aktuellen Knotens
+    // distCurrRef = √((x2 - x1)² + (y2 - y1)² + (z2 - z1)²)
     float distCurrRef = glm::distance(refPt, current->position);
 
-    //this node is better than ones in list
+    // Wenn der aktuelle Knoten näher ist als der entfernteste Knoten in foundNodes
     if (foundNodes.back().first > distCurrRef) {
-
-        foundNodes.push_back({distCurrRef, current});
+        // Füge den aktuellen Knoten zu foundNodes hinzu und sortiere den Vektor
+        foundNodes.emplace_back(distCurrRef, current);
         std::sort(foundNodes.begin(), foundNodes.end());
-        foundNodes.pop_back();
-
-    }
-    if (depth % 3 == 0) {
-        if (refPt.x < current->position.x) {
-            firstTry = current->left;
-            nextTry = current->right;
-        } else {
-
-            firstTry = current->right;
-            nextTry = current->left;
-        }
-    } else if (depth % 3 == 1) {
-        if (refPt.y < current->position.y) {
-            firstTry = current->left;
-            nextTry = current->right;
-        } else {
-            firstTry = current->right;
-            nextTry = current->left;
-        }
-    } else {
-        if (refPt.z < current->position.z) {
-            firstTry = current->left;
-            nextTry = current->right;
-        } else {
-            firstTry = current->right;
-            nextTry = current->left;
-        }
+        foundNodes.pop_back();  // Entferne den entferntesten Knoten
     }
 
-    //this check always since position of x can be closer there (<)
+    // Bestimme die Achse (0: x, 1: y, 2: z) anhand der Tiefe
+    int axis = depth % 3;
+
+    // Bestimme, welcher Teilbaum zuerst durchsucht werden soll
+    Node *firstTry = (refPt[axis] < current->position[axis]) ? current->left : current->right;
+    Node *nextTry = (refPt[axis] < current->position[axis]) ? current->right : current->left;
+
+    // Rekursive Suche im bevorzugten Teilbaum
     if (firstTry != nullptr)
         findNextKNearest(foundNodes, depth + 1, refPt, firstTry);
 
-    //check distance after this is back. since call with first try it could have changed
+    // Aktualisiere die maximale Distanz im foundNodes-Vektor
     float currentMaxDistance = foundNodes.back().first;
 
-    //if right of this is possible to be better distance, then check it too, else leave nullptr to leave it out
-    if ((depth % 3 == 0 && current->position.x - refPt.x < currentMaxDistance) ||
-        (depth % 3 == 1 && current->position.y - refPt.y < currentMaxDistance) ||
-        (depth % 3 == 2 && current->position.z - refPt.z < currentMaxDistance))
-
+    // Überprüfe, ob der alternative Teilbaum durchsucht werden muss
+    // Dies passiert, wenn die Distanz von refPt zur Trennebene (abs(current->position[axis] - refPt[axis]))
+    // kleiner ist als currentMaxDistance
+    if (std::abs(current->position[axis] - refPt[axis]) < currentMaxDistance) {
         if (nextTry != nullptr)
             findNextKNearest(foundNodes, depth + 1, refPt, nextTry);
+    }
 }
-
 
 std::vector<int> CgKdTree::getKNearestNeighbors(glm::vec3 point, int k) {
 
-    std::vector<std::pair<float, Node *>> foundNodes;
+    // Vektor, der die gefundenen Knoten speichert, mit Paaren aus Distanz (float) und Knoten (Node*)
+    std::vector<std::pair<float, Node *>> foundNodes(k, {std::numeric_limits<float>::max(), nullptr});
 
-    for (int i = 0; i < k; i++)
-        foundNodes.push_back({std::numeric_limits<float>::max(), nullptr});
-
+    // Finde die k nächsten Nachbarn und speichere sie in foundNodes.
     findNextKNearest(foundNodes, 0, point, root);
 
-    std::vector<int> returnIndicies;
-    if (foundNodes[k - 1].second == nullptr)
-        return returnIndicies;
+    // Vektor für die Rückgabe der Indizes der k nächsten Nachbarn
+    std::vector<int> returnIndices;
 
-    for (int i = 0; i < k; i++) {
-        returnIndicies.push_back(foundNodes[i].second->index);
+    // Überprüfe, ob der k-te nächste Nachbar gefunden wurde
+    if (foundNodes.back().second == nullptr)
+        return returnIndices;
+
+    // Extrahiere die Indizes der k nächsten Nachbarn aus foundNodes und füge sie dem Rückgabevektor hinzu
+    for (const auto &node: foundNodes) {
+        returnIndices.push_back(node.second->index);
     }
-    return returnIndicies;
+
+    // Gib die Indizes der k nächsten Nachbarn zurück
+    return returnIndices;
 }
 
 
